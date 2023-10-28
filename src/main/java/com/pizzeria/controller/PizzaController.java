@@ -6,6 +6,7 @@ import com.pizzeria.service.PizzaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+
 import java.util.List;
 import java.util.Optional;
 
@@ -42,5 +43,14 @@ public class PizzaController {
     @DeleteMapping("/{id}")
     public void deletePizza(@PathVariable Long id) {
         pizzaService.deletePizza(id);
+    }
+
+    @GetMapping("/")
+    public String home() {
+        return "index";
+    }
+    @GetMapping("/menu")
+    public String men() {
+        return "menu";
     }
 }
