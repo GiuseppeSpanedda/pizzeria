@@ -5,13 +5,14 @@ import com.pizzeria.entity.Pizza;
 import com.pizzeria.service.PizzaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 
 import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/pizzas")
+@RequestMapping("/pizza")
 public class PizzaController {
     private final PizzaService pizzaService;
 
@@ -35,6 +36,12 @@ public class PizzaController {
         return pizzaService.createPizza(pizza);
     }
 
+    @GetMapping("/addPizzas")
+    public ModelAndView showPizzaForm() {
+        return new ModelAndView("addPizzas");
+    }
+
+
     @PutMapping("/{id}")
     public Pizza updatePizza(@PathVariable Long id, @RequestBody Pizza updatedPizza) {
         return pizzaService.updatePizza(id, updatedPizza);
@@ -45,12 +52,18 @@ public class PizzaController {
         pizzaService.deletePizza(id);
     }
 
-    @GetMapping("/")
-    public String home() {
-        return "index";
+    @GetMapping("/index")
+    public ModelAndView index() {
+        ModelAndView modelAndView = new ModelAndView("index");
+        // Puoi aggiungere eventuali dati al model, se necessario.
+        // modelAndView.addObject("key", "value");
+        return modelAndView;
     }
     @GetMapping("/menu")
-    public String men() {
-        return "menu";
+    public ModelAndView menu() {
+        ModelAndView modelAndView = new ModelAndView("menu");
+        // Puoi aggiungere eventuali dati al model, se necessario.
+        // modelAndView.addObject("key", "value");
+        return modelAndView;
     }
 }
