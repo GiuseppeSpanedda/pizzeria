@@ -23,17 +23,17 @@ public class PizzaController {
 
     @GetMapping
     public List<Pizza> getAllPizzas() {
-        return pizzaService.getAllPizzas();
+        return pizzaService.getAll();
     }
 
     @GetMapping("/{id}")
     public Optional<Pizza> getPizzaById(@PathVariable Long id) {
-        return pizzaService.getPizzaById(id);
+        return pizzaService.findById(id);
     }
 
     @PostMapping
     public Pizza createPizza(@RequestBody Pizza pizza) {
-        return pizzaService.createPizza(pizza);
+        return pizzaService.create(pizza);
     }
 
     @GetMapping("/addPizzas")
@@ -44,12 +44,12 @@ public class PizzaController {
 
     @PutMapping("/{id}")
     public Pizza updatePizza(@PathVariable Long id, @RequestBody Pizza updatedPizza) {
-        return pizzaService.updatePizza(id, updatedPizza);
+        return pizzaService.update(id, updatedPizza);
     }
 
     @DeleteMapping("/{id}")
     public void deletePizza(@PathVariable Long id) {
-        pizzaService.deletePizza(id);
+        pizzaService.delete(id);
     }
 
     @GetMapping("/index")
