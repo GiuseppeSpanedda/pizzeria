@@ -7,10 +7,10 @@
 <h2>Creazione Pizza</h2>
 <form id="pizzaForm" th:object="${Pizza}">
     <label for="nome">Nome della Pizza:</label>
-    <input type="text" id="nome" name="nome" required><br><br>
+    <input type="text" id="name" name="name" required><br><br>
 
     <label for="prezzo">Prezzo della Pizza:</label>
-    <input type="number" id="prezzo" name="prezzo" step="0.01" required><br><br>
+    <input type="number" id="price" name="price" step="0.01" required><br><br>
 
     <button type="button" id="inviaButton">Crea Pizza</button>
 </form>
@@ -21,28 +21,36 @@
         inviaDati();
     });
 
-    function inviaDati() {
-        var nome = document.getElementById("nome").value;
-        var prezzo = document.getElementById("prezzo").value;
-        var pizza = {
-            "nome": nome,
-            "prezzo": prezzo
-        };
+  function inviaDati() {
+    var name = document.getElementById("name").value;
+    var price = document.getElementById("price").value;
+    var pizza = {
+        "name": name,
+        "price": price
+    };
 
-        // Invia i dati come JSON
-        fetch("/pizza/createPizza", {
-            method: "POST",
-            body: JSON.stringify(pizza),
-            headers: {
-                "Content-Type": "application/json"
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            // Gestisci la risposta
-            console.log(data);
-        });
-    }
+    // Invia i dati come JSON
+    fetch("/pizza/addPizzas", {
+        method: "POST",
+        body: JSON.stringify(pizza),
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        // Gestisci la risposta
+        console.log(data);
+    })
+    .catch(error => {
+        console.error("Fetch error:", error);
+    });
+}
 </script>
 </body>
 </html>

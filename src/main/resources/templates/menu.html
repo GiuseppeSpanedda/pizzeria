@@ -1,57 +1,35 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menu - La Pizzeria del Gusto</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
-            margin: 0;
-            padding: 0;
+    <!-- ... -->
+    <script>
+        function eliminaPizza(idPizza) {
+            // Puoi utilizzare fetch o un'altra libreria per inviare una richiesta DELETE al tuo endpoint.
+            fetch('/pizza/' + idPizza, {
+                method: 'DELETE',
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                // Puoi fare qualcosa dopo aver eliminato la pizza, ad esempio ricaricare il menu.
+                window.location.reload();
+            })
+            .catch(error => {
+                console.error("Fetch error:", error);
+            });
         }
-        .container {
-            text-align: center;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-            margin: 20px;
-        }
-        h1 {
-            color: #FFA500;
-        }
-        .menu-item {
-            margin: 20px;
-            padding: 10px;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-    </style>
+    </script>
 </head>
 <body>
 <div class="container">
     <h1>Il Nostro Menu</h1>
-    <div class="menu-item">
-        <h2>Pizza Margherita</h2>
-        <p>La classica con pomodoro, mozzarella, basilico.</p>
-    </div>
-    <div class="menu-item">
-        <h2>Pizza Pepperoni</h2>
-        <p>Pomodoro, mozzarella, pepperoni piccanti.</p>
-    </div>
-    <div class="menu-item">
-        <h2>Pizza Funghi</h2>
-        <p>Pomodoro, mozzarella, funghi champignon.</p>
-    </div>
-    <div class="menu-item">
-        <h2>Pizza Quattro Stagioni</h2>
-        <p>Pomodoro, mozzarella, prosciutto cotto, carciofi, funghi, olive.</p>
+    <div th:each="pizza : ${pizzas}" class="menu-item">
+        <h2 th:text="${pizza.name}"></h2>
+        <p th:text="${pizza.price}"></p>
+        <button th:onclick="'eliminaPizza(' + ${pizza.id} + ')'" class="elimina-button">Elimina</button>
     </div>
     <a class="button" href="/pizza/index">Home</a>
 </div>
-
 </body>
 </html>

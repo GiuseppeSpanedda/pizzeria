@@ -4,6 +4,8 @@ package com.pizzeria.controller;
 import com.pizzeria.entity.Pizza;
 import com.pizzeria.service.PizzaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -31,8 +33,9 @@ public class PizzaController {
         return pizzaService.findById(id);
     }
 
-    @PostMapping
+    @PostMapping("/addPizzas")
     public Pizza createPizza(@RequestBody Pizza pizza) {
+        System.out.println("Request received to create pizza");
         return pizzaService.create(pizza);
     }
 
@@ -48,8 +51,14 @@ public class PizzaController {
     }
 
     @DeleteMapping("/{id}")
-    public void deletePizza(@PathVariable Long id) {
-        pizzaService.delete(id);
+    public ResponseEntity<String> deletePizza(@PathVariable Long id) {
+        try {
+            pizzaService.delete(id);
+            return ResponseEntity.ok("Pizza eliminata con successo.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Errore durante l'eliminazione della pizza.");
+        }
     }
 
     @GetMapping("/index")
@@ -61,9 +70,10 @@ public class PizzaController {
     }
     @GetMapping("/menu")
     public ModelAndView menu() {
+        List<Pizza> pizzas = pizzaService.getAll();
         ModelAndView modelAndView = new ModelAndView("menu");
-        // Puoi aggiungere eventuali dati al model, se necessario.
-        // modelAndView.addObject("key", "value");
+        modelAndView.addObject("pizzas", pizzas);
         return modelAndView;
     }
+
 }
