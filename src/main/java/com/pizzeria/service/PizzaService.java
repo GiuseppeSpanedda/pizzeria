@@ -14,5 +14,5 @@ public interface PizzaService {
 
     Pizza update(Long id, Pizza updatedPizza);
 
-    void delete(Long id);
+    Optional<Pizza> delete(Long id);
 }

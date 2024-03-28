@@ -1,35 +1,16 @@
 <!DOCTYPE html>
-<html lang="it" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <!-- ... -->
-    <script>
-        function eliminaPizza(idPizza) {
-            // Puoi utilizzare fetch o un'altra libreria per inviare una richiesta DELETE al tuo endpoint.
-            fetch('/pizza/' + idPizza, {
-                method: 'DELETE',
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                // Puoi fare qualcosa dopo aver eliminato la pizza, ad esempio ricaricare il menu.
-                window.location.reload();
-            })
-            .catch(error => {
-                console.error("Fetch error:", error);
-            });
-        }
-    </script>
-</head>
-<body>
+<html xmlns:th="http://www.thymeleaf.org">
 <div class="container">
     <h1>Il Nostro Menu</h1>
     <div th:each="pizza : ${pizzas}" class="menu-item">
         <h2 th:text="${pizza.name}"></h2>
         <p th:text="${pizza.price}"></p>
-        <button th:onclick="'eliminaPizza(' + ${pizza.id} + ')'" class="elimina-button">Elimina</button>
+        <a th:href="@{/pizza/updatePizza/{id}(id=${pizza.id})}" class="button">Modifica</a>
+        <form th:action="@{/pizza/deletePizza/{id}(id=${pizza.id})}" method="delete">
+            <input type="hidden" name="_method" value="delete" />
+            <button type="submit">Elimina</button>
+        </form>
     </div>
     <a class="button" href="/pizza/index">Home</a>
 </div>
-</body>
 </html>

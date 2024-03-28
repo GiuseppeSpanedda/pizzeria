@@ -27,6 +27,7 @@ public class PizzaServiceImpl implements PizzaService {
         return pizzaRepository.findById(id);
     }
 
+
     @Override
     public Pizza create(Pizza pizza) {
         return pizzaRepository.save(pizza);
@@ -42,7 +43,8 @@ public class PizzaServiceImpl implements PizzaService {
     }
 
     @Override
-    public void delete(Long id) {
+    public Optional<Pizza> delete(Long id) {
         pizzaRepository.deleteById(id);
+        return null;
     }
 }
