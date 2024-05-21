@@ -39,7 +39,7 @@ public class PizzaController {
 
         // Crea un nuovo oggetto Pizza
         Pizza pizza = new Pizza();
-        pizza.setName(name);
+        pizza.setName(name.toUpperCase());
         pizza.setPrice(price);
 
         // Salva la pizza nel database
