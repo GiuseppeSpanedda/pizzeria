@@ -3,17 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <title>Edit Pizza</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
 </head>
-<body>
-<h1>Edit Pizza</h1>
-<form th:action="@{/pizza/updatePizza/{id}(id=${pizza.id})}" method="post">
-    <input type="hidden" name="_method" value="put" />
-    <label for="name">Name:</label>
-    <input type="text" id="name" name="name" th:value="${pizza.name}" />
-    <label for="price">Price:</label>
-    <input type="text" id="price" name="price" th:value="${pizza.price}" />
-    <!-- Aggiungi altri campi per gli altri attributi della pizza se necessario -->
-    <button type="submit">Save</button>
-</form>
+<body class="bg-gray-200 flex justify-center items-center h-screen">
+<div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 max-w-md w-full">
+    <h1 class="text-4xl text-blue-500 mb-6">Modifica Pizza</h1>
+    <form th:action="@{/pizza/updatePizza/{id}(id=${pizza.id})}" method="post" class="mb-4">
+        <input type="hidden" name="_method" value="put" />
+        <div class="mb-4">
+            <label for="name" class="block text-gray-700 text-sm font-bold mb-2">Nome:</label>
+            <input type="text" id="name" name="name" th:value="${pizza.name}" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        </div>
+        <div class="mb-6">
+            <label for="price" class="block text-gray-700 text-sm font-bold mb-2">Prezzo:</label>
+            <input type="text" id="price" name="price" th:value="${pizza.price}" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        </div>
+        <div class="flex items-center justify-between">
+            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Modifica</button>
+            <a href="/pizza/index" class="inline-block bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Home</a>
+        </div>
+    </form>
+</div>
 </body>
 </html>

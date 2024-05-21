@@ -59,19 +59,6 @@ public class PizzaController {
         return new ModelAndView("addPizzas");
     }
 
-  /*  @RequestMapping(method = RequestMethod.PUT,value =  "/updatePizza/{id}")
-    public ResponseEntity<String> updatePizza(@PathVariable Long id, @RequestBody Pizza updatedPizza) {
-        try {
-
-            pizzaService.update(id, updatedPizza);
-            return ResponseEntity.ok("Pizza aggiornata con successo.");
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Errore durante l'aggiornamento della pizza.");
-        }
-
-    }*/
-
     @GetMapping("/deletePizza/{id}")
     public ModelAndView deletePizza(@PathVariable(name = "id") Long id) {
         Optional<Pizza> deletedPizza = pizzaService.delete(id);
@@ -80,7 +67,6 @@ public class PizzaController {
         modelAndView.addObject("pizzas", pizzas);
         return modelAndView;
     }
-
 
     @GetMapping("/updatePizza/{id}")
     public ModelAndView updatePizza(@PathVariable (name = "id") Long id) {

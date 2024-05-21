@@ -1,20 +1,27 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Form Creazione Pizza</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <title>Creazione Pizza</title>
 </head>
-<body>
-<h2>Creazione Pizza</h2>
-<p th:if="${confirmationMessage}" th:text="${confirmationMessage}"></p>
-<form id="pizzaForm" action="/pizza/addPizzas" method="post">
-    <label for="name">Nome della Pizza:</label>
-    <input type="text" id="name" name="name" required><br><br>
-
-    <label for="price">Prezzo della Pizza:</label>
-    <input type="number" id="price" name="price" step="0.01" required><br><br>
-
-    <button type="submit">Crea Pizza</button>
-</form>
-<a class="button" href="/pizza/index">Home</a>
+<body class="bg-gray-200 flex justify-center items-center h-screen">
+<div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 max-w-md w-full">
+    <h2 class="text-4xl text-green-500 mb-6">Crea la tua Pizza</h2>
+    <p th:if="${confirmationMessage}" th:text="${confirmationMessage}" class="text-green-500 mb-4"></p>
+    <form id="pizzaForm" action="/pizza/addPizzas" method="post" class="mb-4">
+        <div class="mb-4">
+            <label for="name" class="block text-gray-700 text-sm font-bold mb-2">Nome :</label>
+            <input type="text" id="name" name="name" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        </div>
+        <div class="mb-6">
+            <label for="price" class="block text-gray-700 text-sm font-bold mb-2">Prezzo :</label>
+            <input type="number" id="price" name="price" step="0.01" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        </div>
+        <div class="flex items-center justify-between">
+            <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Crea Pizza</button>
+            <a href="/pizza/index" class="inline-block bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Home</a>
+        </div>
+    </form>
+</div>
 </body>
 </html>
