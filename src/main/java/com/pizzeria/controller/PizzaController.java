@@ -57,7 +57,7 @@ public class PizzaController {
 
         // Crea un nuovo oggetto Pizza
         Pizza pizza = new Pizza();
-        pizza.setName(name.toUpperCase());
+        pizza.setName(name);
         pizza.setPrice(price);
         pizza.setIngredienti(ingredienteArrayList); // Associa gli ingredienti alla pizza
 
