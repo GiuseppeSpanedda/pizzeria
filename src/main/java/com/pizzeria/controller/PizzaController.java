@@ -144,12 +144,4 @@ public class PizzaController {
         return modelAndView;
     }
 
-    @GetMapping("/login")
-    public ModelAndView login() {
-        ModelAndView modelAndView = new ModelAndView("login");
-        // Puoi aggiungere eventuali dati al model, se necessario.
-        // modelAndView.addObject("key", "value");
-        return modelAndView;
-    }
-
 }

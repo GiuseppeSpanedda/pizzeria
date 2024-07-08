@@ -1,5 +1,6 @@
 package com.pizzeria.service;
 
+import com.pizzeria.entity.Ingrediente;
 import com.pizzeria.entity.Pizza;
 import com.pizzeria.repository.PizzaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,6 @@ public class PizzaServiceImpl implements PizzaService {
         return pizzaRepository.findById(id);
     }
 
-
     @Override
     public Pizza create(Pizza pizza) {
         return pizzaRepository.save(pizza);
@@ -44,8 +44,16 @@ public class PizzaServiceImpl implements PizzaService {
 
     @Override
     public Optional<Pizza> delete(Long id) {
-        pizzaRepository.deleteById(id);
-        return null;
+        Optional<Pizza> pizzaOpt = pizzaRepository.findById(id);
+        if (pizzaOpt.isPresent()) {
+            Pizza pizza = pizzaOpt.get();
+            // Rimuovi le relazioni con gli ingredienti
+            for (Ingrediente ingrediente : pizza.getIngredienti()) {
+                ingrediente.getPizzas().remove(pizza);
+            }
+            pizza.getIngredienti().clear();
+            pizzaRepository.delete(pizza);
+        }
+        return pizzaOpt;
     }
-
 }
