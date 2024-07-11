@@ -56,4 +56,17 @@ public class PizzaServiceImpl implements PizzaService {
         }
         return pizzaOpt;
     }
+
+    public double calculateUpdatedPrice(Pizza pizza) {
+        // Inizializza il prezzo con il prezzo base della pizza
+        double updatedPrice = 0;
+
+        // Aggiungi il prezzo di ogni ingrediente selezionato
+        for (Ingrediente ingrediente : pizza.getIngredienti()) {
+            updatedPrice += ingrediente.getPrice();
+        }
+
+        return updatedPrice;
+    }
+
 }

@@ -26,6 +26,14 @@ public class Pizza implements Serializable {
     )
     private List<Ingrediente> ingredienti = new ArrayList<>();
 
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "pizza_ordini",
+            joinColumns = @JoinColumn(name = "pizza_id"),
+            inverseJoinColumns = @JoinColumn(name = "ordini_id")
+    )
+    private List<Ordine> ordini = new ArrayList<>();
+
     public Pizza() {
     }
     public Pizza(String name, double price) {
@@ -69,4 +77,6 @@ public class Pizza implements Serializable {
     public void setIngredienti(List<Ingrediente> ingredienti) {
         this.ingredienti = ingredienti;
     }
+
+
 }

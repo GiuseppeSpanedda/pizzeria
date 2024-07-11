@@ -1,17 +1,23 @@
 package com.pizzeria.controller;
 
 
+import ch.qos.logback.classic.Logger;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.pizzeria.entity.Ingrediente;
+import com.pizzeria.entity.Ordine;
 import com.pizzeria.entity.Pizza;
 import com.pizzeria.repository.IngredienteRepository;
+import com.pizzeria.repository.OrdineRepository;
 import com.pizzeria.service.PizzaService;
 import jakarta.servlet.http.HttpServletRequest;
+import org.hibernate.grammars.hql.HqlParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -29,9 +35,24 @@ public class PizzaController {
 
     @Autowired
     private IngredienteRepository ingredienteRepository;
-    @GetMapping
-    public List<Pizza> getAllPizzas() {
-        return pizzaService.getAll();
+
+    @Autowired
+    private OrdineRepository ordineRepository;
+
+    @GetMapping("/index")
+    public ModelAndView index() {
+        ModelAndView modelAndView = new ModelAndView("index");
+        // Puoi aggiungere eventuali dati al model, se necessario.
+        // modelAndView.addObject("key", "value");
+        return modelAndView;
+    }
+
+    @GetMapping("/menu")
+    public ModelAndView menu() {
+        List<Pizza> pizzas = pizzaService.getAll();
+        ModelAndView modelAndView = new ModelAndView("menu");
+        modelAndView.addObject("pizzas", pizzas);
+        return modelAndView;
     }
 
     @GetMapping("/addPizzas")
@@ -72,6 +93,7 @@ public class PizzaController {
         modelAndView.addObject("ingredienti", ingredienteRepository.findAll()); // Ripassa gli ingredienti alla vista
         return modelAndView;
     }
+
     @GetMapping("/deletePizza/{id}")
     public ModelAndView deletePizza(@PathVariable(name = "id") Long id) {
         Optional<Pizza> deletedPizza = pizzaService.delete(id);
@@ -97,13 +119,12 @@ public class PizzaController {
         }
     }
 
-
     @PostMapping("/updatePizza/{id}")
     public ModelAndView processUpdatePizza(@PathVariable Long id, @ModelAttribute Pizza updatedPizza) {
         ModelAndView modelAndView = new ModelAndView();
         try {
             // Calcola il prezzo aggiornato della pizza prendendo in considerazione gli ingredienti selezionati
-            double updatedPrice = calculateUpdatedPrice(updatedPizza);
+            double updatedPrice = pizzaService.calculateUpdatedPrice(updatedPizza);
             updatedPizza.setPrice(updatedPrice);
 
             // Effettua l'aggiornamento della pizza
@@ -116,31 +137,32 @@ public class PizzaController {
         return modelAndView;
     }
 
-    private double calculateUpdatedPrice(Pizza pizza) {
-        // Inizializza il prezzo con il prezzo base della pizza
-        double updatedPrice = 0;
+    @PostMapping("/ordinaPizza/{id}")
+    public ModelAndView processOrdinaPizza(@PathVariable Long id) {
+        ModelAndView modelAndView = new ModelAndView();
+        try {
+            LocalDateTime now = LocalDateTime.now();
 
-        // Aggiungi il prezzo di ogni ingrediente selezionato
-        for (Ingrediente ingrediente : pizza.getIngredienti()) {
-            updatedPrice += ingrediente.getPrice();
+            ArrayList<Pizza> lista = new ArrayList<Pizza>();
+            Optional<Pizza> optionalPizza = pizzaService.findById(id);
+            if (optionalPizza.isPresent()) {
+                Pizza pizza = optionalPizza.get(); // Estrai il valore effettivo dall'Optional
+                lista.add(pizza);
+
+                Ordine order = new Ordine(now, lista);
+                ordineRepository.save(order);
+
+
+                modelAndView.setViewName("redirect:/pizza/menu");
+            }else {
+                return new ModelAndView("error");
+
+            }
+
+        } catch (Exception e) {
+            // Gestisci l'eccezione se l'aggiornamento della pizza fallisce
+            modelAndView.setViewName("error");
         }
-
-        return updatedPrice;
-    }
-
-
-    @GetMapping("/index")
-    public ModelAndView index() {
-        ModelAndView modelAndView = new ModelAndView("index");
-        // Puoi aggiungere eventuali dati al model, se necessario.
-        // modelAndView.addObject("key", "value");
-        return modelAndView;
-    }
-    @GetMapping("/menu")
-    public ModelAndView menu() {
-        List<Pizza> pizzas = pizzaService.getAll();
-        ModelAndView modelAndView = new ModelAndView("menu");
-        modelAndView.addObject("pizzas", pizzas);
         return modelAndView;
     }
 
