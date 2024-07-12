@@ -1,5 +1,6 @@
 package com.pizzeria.service;
 
+import com.pizzeria.entity.Ingrediente;
 import com.pizzeria.entity.Pizza;
 
 import java.util.List;
@@ -15,4 +16,7 @@ public interface PizzaService {
     Pizza update(Long id, Pizza updatedPizza);
 
     Optional<Pizza> delete(Long id);
+
+    double calculateUpdatedPrice(Pizza pizza);
+
 }

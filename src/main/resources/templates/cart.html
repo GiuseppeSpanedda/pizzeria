@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <title>Carrello</title>
+</head>
+<body class="bg-gray-200 flex justify-center items-center h-screen">
+<div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 max-w-xl w-full mx-auto">
+    <div class="w-full max-w-xs mx-auto flex flex-col items-center text-center">
+        <h1 class="text-4xl text-yellow-500 mb-6 uppercase">Carrello</h1>
+        <!-- Verifica se ci sono pizze nel carrello -->
+        <div th:if="${not #lists.isEmpty(cart)}">
+            <!-- Loop attraverso le pizze nel carrello -->
+            <div th:each="pizza : ${cart}" class="menu-item mb-4">
+                <div class="flex items-center space-x-2 w-full justify-center">
+                    <h2 class="text-xl font-bold" th:text="${pizza.name}"></h2>
+                    <p class="text-xl font-bold" th:text="${pizza.price} + ' €'"></p>
+                </div>
+                <div class="flex justify-between">
+                    <!-- Link per modificare la pizza nel carrello -->
+                    <a th:href="@{/pizza/updatePizza/{id}(id=${pizza.id})}" class="inline-block bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 transition duration-300 ease-in-out ml-2 ">Modifica</a>
+                    <!-- Form per rimuovere la pizza dal carrello -->
+                    <a th:href="@{/pizza/removeFromCart/{id}(id=${pizza.id})}" class="inline-block bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700 transition duration-300 ease-in-out ml-2">Rimuovi</a>
+                </div>
+            </div>
+        </div>
+        <!-- Messaggio se il carrello è vuoto -->
+        <div th:if="${#lists.isEmpty(cart)}">
+            <p class="text-xl font-semibold mb-2">Il tuo carrello è vuoto.</p>
+        </div>
+
+        <!-- Pulsanti di navigazione -->
+        <div class="flex justify-between mt-6">
+            <a th:href="@{/pizza/menu}" class="btn-green inline-block bg-green-500 text-white font-bold py-2 px-4 rounded-lg shadow hover:bg-green-700 hover:shadow-lg transition duration-300 ease-in-out ml-2">Menù
+            </a>
+            <!-- Form per l'ordine, disabilitato se il carrello è vuoto -->
+            <form th:action="@{/pizza/processOrder}" method="post" class="inline-block"
+                  th:if="${not #lists.isEmpty(cart)}">
+                <button class="btn-green inline-block bg-green-500 text-white font-bold py-2 px-4 rounded-lg shadow hover:bg-green-700 hover:shadow-lg transition duration-300 ease-in-out ml-2"
+                        type="submit">Ordina</button>
+            </form>
+            <a th:href="@{/pizza/index}" class="btn-yellow inline-block bg-yellow-500 text-white font-bold py-2 px-4 rounded-lg shadow hover:bg-yellow-700 hover:shadow-lg transition duration-300 ease-in-out ml-2">Home
+            </a>
+        </div>
+    </div>
+</div>
+</body>
+</html>
