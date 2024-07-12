@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "pizze")
@@ -26,12 +27,7 @@ public class Pizza implements Serializable {
     )
     private List<Ingrediente> ingredienti = new ArrayList<>();
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "pizza_ordini",
-            joinColumns = @JoinColumn(name = "pizza_id"),
-            inverseJoinColumns = @JoinColumn(name = "ordini_id")
-    )
+    @ManyToMany(mappedBy = "pizze", fetch = FetchType.LAZY)
     private List<Ordine> ordini = new ArrayList<>();
 
     public Pizza() {
@@ -78,5 +74,12 @@ public class Pizza implements Serializable {
         this.ingredienti = ingredienti;
     }
 
+    public List<Ordine> getOrdini() {
+        return ordini;
+    }
+
+    public void setOrdini(List<Ordine> ordini) {
+        this.ordini = ordini;
+    }
 
 }

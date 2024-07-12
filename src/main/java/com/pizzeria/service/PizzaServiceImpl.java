@@ -1,6 +1,7 @@
 package com.pizzeria.service;
 
 import com.pizzeria.entity.Ingrediente;
+import com.pizzeria.entity.Ordine;
 import com.pizzeria.entity.Pizza;
 import com.pizzeria.repository.PizzaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +53,12 @@ public class PizzaServiceImpl implements PizzaService {
                 ingrediente.getPizzas().remove(pizza);
             }
             pizza.getIngredienti().clear();
+
+            // Rimuovi le relazioni con gli ordini
+            for (Ordine ordine : pizza.getOrdini()) {
+                ordine.getPizze().remove(pizza);
+            }
+            pizza.getOrdini().clear();
             pizzaRepository.delete(pizza);
         }
         return pizzaOpt;

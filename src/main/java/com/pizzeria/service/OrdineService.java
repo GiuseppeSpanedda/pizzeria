@@ -9,6 +9,8 @@ import java.util.Optional;
 public interface OrdineService {
     List<Ordine> getAll();
 
+    List<Ordine>getAllWithPizze();
+
     Optional<Ordine> findById(Long id);
 
     Ordine create(Ordine ordine);

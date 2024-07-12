@@ -33,11 +33,11 @@ public class OrdineController {
     @Autowired
     private PizzaRepository pizzaRepository;
 
-    @GetMapping("/ordini")
+    @GetMapping("/orders")
     public ModelAndView ordini() {
-        List<Ordine> ordinis = ordineService.getAll();
-        ModelAndView modelAndView = new ModelAndView("ordini");
-        modelAndView.addObject("ordinis", ordinis);
+        List<Ordine> ordini = ordineService.getAllWithPizze(); // Assumi che ci sia un metodo che carica gli ordini con le pizze
+        ModelAndView modelAndView = new ModelAndView("orders");
+        modelAndView.addObject("orders", ordini);
         return modelAndView;
     }
 

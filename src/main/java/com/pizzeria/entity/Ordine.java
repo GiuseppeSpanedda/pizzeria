@@ -16,19 +16,25 @@ public class Ordine {
     private Long id;
     private LocalDateTime dataOrdine;
 
-    @ManyToMany(mappedBy = "ordini")
-    private List<Pizza> pizzas = new ArrayList<>();
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "ordine_pizza",
+            joinColumns = @JoinColumn(name = "ordine_id"),
+            inverseJoinColumns = @JoinColumn(name = "pizza_id")
+    )
+    private List<Pizza> pizze = new ArrayList<>();
 
     public Ordine() {}
 
-    public Ordine(Long id) {
-        this.id = id;
+    public Ordine(LocalDateTime dataOrdine) {
+        this.dataOrdine = dataOrdine;
     }
 
-    public Ordine(LocalDateTime dataOrdine, List<Pizza> pizzas) {
+    public Ordine(LocalDateTime dataOrdine, List<Pizza> pizza) {
         this.dataOrdine = dataOrdine;
-        this.pizzas = pizzas;
+        this.pizze = pizza;
     }
+
 
     public Long getId() {
         return id;
@@ -36,5 +42,13 @@ public class Ordine {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public List<Pizza> getPizze() {
+        return pizze;
+    }
+
+    public void setPizze(List<Pizza> pizze) {
+        this.pizze = pizze;
     }
 }

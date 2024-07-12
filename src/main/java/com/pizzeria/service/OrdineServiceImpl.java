@@ -5,6 +5,7 @@ import com.pizzeria.repository.OrdineRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,6 +21,11 @@ public class OrdineServiceImpl implements OrdineService {
     @Override
     public List<Ordine> getAll() {
         return ordineRepository.findAll();
+    }
+    @Override
+    @Transactional(readOnly = true)
+    public List<Ordine> getAllWithPizze() {
+        return ordineRepository.findAllWithPizze();
     }
 
     @Override
