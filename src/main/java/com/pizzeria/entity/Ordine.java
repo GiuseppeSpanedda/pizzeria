@@ -10,6 +10,8 @@ import java.util.List;
 @Entity
 @Table(name = "ordini")
 @Data
+@Getter
+@Setter
 public class Ordine {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,20 +37,4 @@ public class Ordine {
         this.pizze = pizza;
     }
 
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public List<Pizza> getPizze() {
-        return pizze;
-    }
-
-    public void setPizze(List<Pizza> pizze) {
-        this.pizze = pizze;
-    }
 }

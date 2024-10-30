@@ -3,6 +3,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +15,8 @@ import java.util.Objects;
 @Table(name = "pizze")
 @AllArgsConstructor
 @Data
+@Getter
+@Setter
 public class Pizza implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,46 +45,6 @@ public class Pizza implements Serializable {
         this.name = name;
         this.price = price;
         this.ingredienti = ingredienti;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    public List<Ingrediente> getIngredienti() {
-        return ingredienti;
-    }
-
-    public void setIngredienti(List<Ingrediente> ingredienti) {
-        this.ingredienti = ingredienti;
-    }
-
-    public List<Ordine> getOrdini() {
-        return ordini;
-    }
-
-    public void setOrdini(List<Ordine> ordini) {
-        this.ordini = ordini;
     }
 
 }
