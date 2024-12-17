@@ -34,14 +34,14 @@ public class SecurityConfig {
                 )
                 .authorizeRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers(antMatcher("/pizza/index")).permitAll()
+                                .requestMatchers(antMatcher("/home")).permitAll()
                                 .requestMatchers(antMatcher("/h2-console/**")).permitAll()
                                 .anyRequest().authenticated()
                 )
                 .formLogin(formLogin ->
                         formLogin
                                 .loginPage("/login")
-                                .defaultSuccessUrl("/pizza/index", true) // Questa linea imposta la pagina di destinazione
+                                .defaultSuccessUrl("/home", true) // Questa linea imposta la pagina di destinazione
                                 .permitAll()
                 )
                 .logout(logout ->

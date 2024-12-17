@@ -9,6 +9,9 @@
     <h2 class="text-4xl text-green-500 mb-6">CREA LA TUA PIZZA</h2>
     <p th:if="${confirmationMessage}" th:text="${confirmationMessage}" class="text-green-500 mb-4"></p>
     <form id="pizzaForm" action="/pizza/addPizzas" method="post" class="mb-4">
+        <!-- Include il token CSRF -->
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
         <div class="mb-4">
             <label for="name" class="block text-gray-700 text-sm font-bold mb-2">Nome :</label>
             <input type="text" id="name" name="name" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">

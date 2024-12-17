@@ -1,11 +1,31 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Home</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Pizzeria del Gusto</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
 </head>
-<body>
-<h1>Benvenuto!</h1>
-<p>Questa è la home page pubblica.</p>
-<a href="/login">Login</a>
+<body class="bg-gray-200 flex justify-center items-center h-screen">
+<div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 max-w-xl w-full">
+    <h1 class="text-4xl text-yellow-500 mb-6 uppercase">Benvenuto alla Pizzeria del Gusto</h1>
+    <p class="text-gray-700 mb-4">Questa è la home page pubblica. Puoi fare il login o andare alla pagina index.</p>
+    <div class="flex justify-between">
+        <a href="/pizza/index"
+           class="inline-block bg-green-500 text-white font-bold py-2 px-4 rounded-lg shadow hover:bg-green-700 hover:shadow-lg transition duration-300 ease-in-out mr-2">
+            Vai alla Pagina Index
+        </a>
+        <a href="/login"
+           class="inline-block bg-blue-500 text-white font-bold py-2 px-4 rounded-lg shadow hover:bg-blue-700 hover:shadow-lg transition duration-300 ease-in-out">
+            Login
+        </a>
+        <form th:action="@{/logout}" method="post">
+            <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg shadow hover:shadow-lg transition duration-300 ease-in-out">
+                Logout
+            </button>
+        </form>
+    </div>
+</div>
 </body>
 </html>
+
