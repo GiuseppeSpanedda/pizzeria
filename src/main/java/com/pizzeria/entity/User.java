@@ -2,11 +2,15 @@ package com.pizzeria.entity;
 
 import lombok.Data;
 import jakarta.persistence.*;
+import lombok.Setter;
+import org.springframework.security.config.annotation.authentication.ProviderManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configurers.provisioning.UserDetailsManagerConfigurer;
 
 
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 @Data
+@Setter
 public class User {
 
     @Id
@@ -14,7 +18,7 @@ public class User {
     private Long id;
 
     private String username;
-    private String password;
+    private  String password;
     private String role;
 
 }
