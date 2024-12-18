@@ -29,15 +29,12 @@ public class CustomUserDetailsService implements UserDetailsService {
         }
 
         // Cerca l'utente nel database
-        Optional<User> userOpt = Optional.ofNullable(userRepository.findByUsername(username));
+        User user = userRepository.findByUsername(username);
 
         // Se l'utente non esiste nel database, lanciamo un'eccezione
-        if (userOpt.isEmpty()) {
+        if (user==null) {
             throw new UsernameNotFoundException("User not found with username: " + username);
         }
-
-        // Recuperiamo l'utente trovato nel database
-        User user = userOpt.get();
 
         // Restituiamo un oggetto UserDetails usando i dettagli dell'utente trovato nel database
         return org.springframework.security.core.userdetails.User.builder()

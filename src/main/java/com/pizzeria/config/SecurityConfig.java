@@ -35,7 +35,7 @@ public class SecurityConfig {
                 .authorizeRequests(authorizeRequests ->
                         authorizeRequests
                                 .requestMatchers(antMatcher("/home")).permitAll()
-                                .requestMatchers(antMatcher("/h2-console/**")).permitAll()
+                                .requestMatchers(antMatcher("/users/create")).permitAll()                                .requestMatchers(antMatcher("/h2-console/**")).permitAll()
                                 .anyRequest().authenticated()
                 )
                 .formLogin(formLogin ->
