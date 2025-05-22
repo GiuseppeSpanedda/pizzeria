@@ -19,7 +19,7 @@
         <div class="mb-4">
             <label class="block text-gray-700 text-sm font-bold mb-2">Ingredienti :</label>
             <div th:each="ingrediente : ${ingredienti}">
-                <input type="checkbox" th:id="${ingrediente.id}" th:name="ingre" th:value="${ingrediente.nome}" class="mr-2 leading-tight">
+                <input type="checkbox" th:id="${ingrediente.id}" th:name="ingredients" th:value="${ingrediente.nome}" class="mr-2 leading-tight">
                 <label th:for="${ingrediente.id}" class="text-gray-700 text-sm font-bold mb-2" th:text="${ingrediente.nome + ' - ' + ingrediente.price}"></label><br>
             </div>
         </div>

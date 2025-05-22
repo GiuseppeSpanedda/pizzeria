@@ -20,7 +20,7 @@
                     <!-- Link per modificare la pizza nel carrello -->
                     <a th:href="@{/pizza/updatePizza/{id}(id=${pizza.id})}" class="inline-block bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 transition duration-300 ease-in-out ml-2 ">Modifica</a>
                     <!-- Form per rimuovere la pizza dal carrello -->
-                    <a th:href="@{/pizza/removeFromCart/{id}(id=${pizza.id})}" class="inline-block bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700 transition duration-300 ease-in-out ml-2">Rimuovi</a>
+                    <a th:href="@{/cart/removeFromCart/{id}(id=${pizza.id})}" class="inline-block bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700 transition duration-300 ease-in-out ml-2">Rimuovi</a>
                 </div>
             </div>
         </div>
@@ -34,7 +34,7 @@
             <a th:href="@{/pizza/menu}" class="btn-green inline-block bg-green-500 text-white font-bold py-2 px-4 rounded-lg shadow hover:bg-green-700 hover:shadow-lg transition duration-300 ease-in-out ml-2">Menù
             </a>
             <!-- Form per l'ordine, disabilitato se il carrello è vuoto -->
-            <form th:action="@{/pizza/processOrder}" method="post" class="inline-block"
+            <form th:action="@{/order/processOrder}" method="post" class="inline-block"
                   th:if="${not #lists.isEmpty(cart)}">
                 <button class="btn-green inline-block bg-green-500 text-white font-bold py-2 px-4 rounded-lg shadow hover:bg-green-700 hover:shadow-lg transition duration-300 ease-in-out ml-2"
                         type="submit">Ordina</button>

@@ -1,27 +1,18 @@
 package com.pizzeria.controller;
 
 
-import ch.qos.logback.classic.Logger;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import com.pizzeria.dto.form.PizzaForm;
 import com.pizzeria.entity.Ingrediente;
-import com.pizzeria.entity.Ordine;
 import com.pizzeria.entity.Pizza;
 import com.pizzeria.repository.IngredienteRepository;
-import com.pizzeria.repository.OrdineRepository;
 import com.pizzeria.service.PizzaService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.transaction.Transactional;
-import org.hibernate.grammars.hql.HqlParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,24 +20,17 @@ import java.util.Optional;
 @RequestMapping("/pizza")
 public class PizzaController {
     private final PizzaService pizzaService;
+    private final IngredienteRepository ingredienteRepository;
 
     @Autowired
-    public PizzaController(PizzaService pizzaService) {
+    public PizzaController(PizzaService pizzaService, IngredienteRepository ingredienteRepository) {
         this.pizzaService = pizzaService;
+        this.ingredienteRepository = ingredienteRepository;
     }
-
-    @Autowired
-    private IngredienteRepository ingredienteRepository;
-
-    @Autowired
-    private OrdineRepository ordineRepository;
 
     @GetMapping("/index")
     public ModelAndView index() {
-        ModelAndView modelAndView = new ModelAndView("index");
-        // Puoi aggiungere eventuali dati al model, se necessario.
-        // modelAndView.addObject("key", "value");
-        return modelAndView;
+        return new ModelAndView("index");
     }
 
     @GetMapping("/menu")
@@ -66,35 +50,35 @@ public class PizzaController {
     }
 
     @PostMapping("/addPizzas")
-    public ModelAndView createPizza(HttpServletRequest request) {
-        String name = request.getParameter("name");
-        double price = 0;
-        String[] ingredientiArray = request.getParameterValues("ingre");
-        List<String> ingredienti = ingredientiArray != null ? Arrays.asList(ingredientiArray) : new ArrayList<>();
-        ArrayList<Ingrediente> ingredienteArrayList = new ArrayList<>();
-        for (String ingrediente : ingredienti) {
-            Ingrediente i = ingredienteRepository.findByNome(ingrediente);
-            ingredienteArrayList.add(i);
-            price += i.getPrice();
+    public ModelAndView createPizza(@ModelAttribute PizzaForm pizzaForm) {
+        String name = pizzaForm.getName();
+        List<String> ingredientiNomi = pizzaForm.getIngredients() != null ? pizzaForm.getIngredients() : new ArrayList<>();
+
+        List<Ingrediente> ingredienti = new ArrayList<>();
+        double price = 0.0;
+
+        for (String nomeIngrediente : ingredientiNomi) {
+            Ingrediente ingrediente = ingredienteRepository.findByNome(nomeIngrediente);
+            if (ingrediente != null) {
+                ingredienti.add(ingrediente);
+                price += ingrediente.getPrice();
+            }
         }
 
-        // Crea un nuovo oggetto Pizza
         Pizza pizza = new Pizza();
         pizza.setName(name);
         pizza.setPrice(price);
-        pizza.setIngredienti(ingredienteArrayList); // Associa gli ingredienti alla pizza
+        pizza.setIngredienti(ingredienti);
 
-        // Salva la pizza nel database
         pizzaService.create(pizza);
 
-        String confirmationMessage = "Nuova Pizza: "+pizza.getName() +" aggiunta, prezzo: "+pizza.getPrice();
-
-        // Ritorna la vista con il messaggio di conferma
         ModelAndView modelAndView = new ModelAndView("addPizzas");
-        modelAndView.addObject("confirmationMessage", confirmationMessage);
-        modelAndView.addObject("ingredienti", ingredienteRepository.findAll()); // Ripassa gli ingredienti alla vista
+        modelAndView.addObject("confirmationMessage", "Nuova Pizza: " + name + " aggiunta, prezzo: " + price);
+        modelAndView.addObject("ingredienti", ingredienteRepository.findAll());
+
         return modelAndView;
     }
+
 
     @GetMapping("/deletePizza/{id}")
     public ModelAndView deletePizza(@PathVariable(name = "id") Long id) {
@@ -116,7 +100,6 @@ public class PizzaController {
             editView.addObject("allIngredienti", allIngredienti);
             return editView;
         } else {
-            // Gestisci il caso in cui la pizza non esista, ad esempio reindirizzando a una pagina di errore
             return new ModelAndView("error");
         }
     }
@@ -138,102 +121,4 @@ public class PizzaController {
         }
         return modelAndView;
     }
-
-    @PostMapping("/addToCart/{id}")
-    public ModelAndView addToCart(@PathVariable Long id, HttpServletRequest request) {
-        ModelAndView modelAndView = new ModelAndView("redirect:/pizza/menu");
-
-        // Trova la pizza dal servizio
-        Optional<Pizza> optionalPizza = pizzaService.findById(id);
-
-        if (optionalPizza.isPresent()) {
-            Pizza pizza = optionalPizza.get();
-
-            // Ottieni il carrello dalla sessione
-            List<Pizza> cart = (List<Pizza>) request.getSession().getAttribute("cart");
-
-            // Se il carrello non esiste nella sessione, crea un nuovo carrello
-            if (cart == null) {
-                cart = new ArrayList<>();
-                request.getSession().setAttribute("cart", cart);
-            }
-
-            // Aggiungi la pizza al carrello
-            cart.add(pizza);
-
-            // Aggiorna la sessione con il carrello aggiornato
-            request.getSession().setAttribute("cart", cart);
-        }
-
-        return modelAndView;
-    }
-
-    @GetMapping("/cart")
-    public ModelAndView showCart(HttpServletRequest request) {
-        ModelAndView modelAndView = new ModelAndView("cart");
-        List<Pizza> cart = (List<Pizza>) request.getSession().getAttribute("cart");
-        if (cart == null) {
-            cart = new ArrayList<>();
-        }
-        modelAndView.addObject("cart", cart);
-        return modelAndView;
-    }
-
-    @GetMapping("/removeFromCart/{id}")
-    public ModelAndView removeFromCart(@PathVariable Long id, HttpServletRequest request) {
-        ModelAndView modelAndView = new ModelAndView("redirect:/pizza/cart");
-        List<Pizza> cart = (List<Pizza>) request.getSession().getAttribute("cart");
-        if (cart != null) {
-            Pizza pizzaToRemove = cart.stream()
-                    .filter(pizza -> pizza.getId().equals(id))
-                    .findFirst()
-                    .orElse(null);
-            if (pizzaToRemove != null) {
-                cart.remove(pizzaToRemove); // Rimuove l'elemento trovato
-                request.getSession().setAttribute("cart",cart);
-            }
-
-        }
-        return modelAndView;
-    }
-
-
-    @PostMapping("/processOrder")
-    @Transactional
-    public ModelAndView processOrder(HttpServletRequest request) {
-        ModelAndView modelAndView = new ModelAndView();
-        try {
-            List<Pizza> cart = (List<Pizza>) request.getSession().getAttribute("cart");
-            if (cart != null && !cart.isEmpty()) {
-                LocalDateTime now = LocalDateTime.now();
-                // Crea un nuovo ordine per questa pizza
-                Ordine order = new Ordine(now);
-
-                for (Pizza pizza : cart) {
-                    // Carica la pizza dal repository per assicurarti di avere un'istanza gestita
-                    Pizza managedPizza = pizzaService.findById(pizza.getId())
-                            .orElseThrow(() -> new IllegalArgumentException("Pizza not found"));
-                    // Aggiungi la pizza all'ordine
-                    order.getPizze().add(managedPizza);
-
-                }
-                // Salvataggio dell'ordine
-                ordineRepository.save(order);
-
-                // Rimuovi il carrello dalla sessione dopo il salvataggio
-                request.getSession().removeAttribute("cart");
-                modelAndView.setViewName("redirect:/pizza/menu");
-            } else {
-                modelAndView.setViewName("redirect:/pizza/cart");
-                modelAndView.addObject("message", "Cart is empty");
-            }
-        } catch (Exception e) {
-            modelAndView.setViewName("error");
-            modelAndView.addObject("message", e.getMessage());
-        }
-        return modelAndView;
-    }
-
-
-
 }
