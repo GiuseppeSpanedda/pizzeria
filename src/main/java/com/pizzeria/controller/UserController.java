@@ -1,6 +1,5 @@
 package com.pizzeria.controller;
 
-import com.pizzeria.entity.Ordine;
 import com.pizzeria.entity.User;
 import com.pizzeria.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +9,7 @@ import org.springframework.web.servlet.ModelAndView;
 import java.util.List;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/user")
 public class UserController {
 
     private final UserService userService;
